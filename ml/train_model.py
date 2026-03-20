@@ -35,8 +35,13 @@ BASE_FEATURES = [
 ]
 ENHANCED_FEATURES = BASE_FEATURES + [
     'ksdma_zone', 'elevation', 'slope',
-    'river_distance', 'drainage_density'
+    'river_distance', 'drainage_density',
+    'annual_rainfall_mm', 'extreme_rain_events',   # added after rainfall download
 ]
+
+# Drop any enhanced features not yet present in the CSV (graceful degradation)
+def _available_features(df, cols):
+    return [c for c in cols if c in df.columns]
 
 print("=" * 60)
 print("TRAINING FLOOD RISK MODEL")
@@ -54,6 +59,7 @@ else:
     print(f"   Run scripts/enrich_with_indian_sources.py to generate it.")
 
 df = pd.read_csv(DATA_PATH)
+feature_columns = _available_features(df, feature_columns)   # skip missing cols
 print(f"  Rows     : {len(df):,}")
 print(f"  Columns  : {list(df.columns)}")
 
