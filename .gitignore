@@ -2,6 +2,7 @@ venv/
 __pycache__/
 .env
 *.pkl
+!ml/*.pkl
 *.zip
 *.log
 
